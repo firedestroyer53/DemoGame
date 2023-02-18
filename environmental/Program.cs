@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace environmental
+﻿namespace environmental
 {
     class Program
     {
@@ -110,7 +108,7 @@ namespace environmental
 
             Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
 
-
+            
         }
     }
 }
