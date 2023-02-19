@@ -1,4 +1,5 @@
-﻿namespace DemoGame
+﻿using System.Threading;
+namespace DemoGame
 {
     class DemoGame
     {
@@ -8,14 +9,16 @@
             public int Intelligence { get; set; }
             public int Agility { get; set; }
             public int Reputation { get; set; }
+            public int HP { get; set; }
             public string Name { get; set; }
-            public Character(int strength, int agility, int intelligence, string name, int reputation)
+            public Character(int strength, int agility, int intelligence, string name, int reputation, int hp)
             {
                 Strength = strength;
                 Agility = agility;
                 Intelligence = intelligence;
                 Name = name;
                 Reputation = reputation;
+                HP = hp;
             }
 
         }
@@ -81,7 +84,7 @@
 
                     // Create player character
                     Console.WriteLine("What is your name?");
-                    player = new Character(inputs[0], inputs[1], inputs[2], Console.ReadLine(), 50);
+                    player = new Character(inputs[0], inputs[1], inputs[2], Console.ReadLine(), 50, 100);
                 }
                 catch (FormatException)
                 {
@@ -96,10 +99,9 @@
             return player;
         }
 
-        public void Battle(Character, Enemy)
+        static void Battle(Character player, Enemy enemy)
         {
-            Random rnd= new Random();
-
+            
         }
 
         public static void Main()
@@ -114,7 +116,7 @@
 
             Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
 
-            Console.WriteLine("No tutorial yet, here is first battle.")
-        }
+            Console.WriteLine("No tutorial yet, here is first battle");
+            
     }
 }
