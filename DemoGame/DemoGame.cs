@@ -1,6 +1,6 @@
-﻿namespace environmental
+﻿namespace DemoGame
 {
-    class Program
+    class DemoGame
     {
         public class Character
         {
@@ -36,7 +36,6 @@
                 IsAllyable = isAllyable;
             }
         }
-
         public class Enemy
         {
             public int HP { get; set; }
@@ -96,19 +95,26 @@
 
             return player;
         }
+
+        public void Battle(Character, Enemy)
+        {
+            Random rnd= new Random();
+
+        }
+
         public static void Main()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
             Console.WriteLine("Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
             Console.WriteLine("You need to assign 20 skill points.");
-            
+            //Increases the health and attack stats of monsters with the player's
             float LevelScale = 1.0f;
-
+            // Creates the character
             Character player = CreateCharacter();
 
             Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
 
-            
+            Console.WriteLine("No tutorial yet, here is first battle.")
         }
     }
 }
