@@ -1,5 +1,4 @@
-﻿using System.Threading;
-namespace DemoGame
+﻿namespace DemoGame
 {
     class DemoGame
     {
@@ -43,13 +42,15 @@ namespace DemoGame
         {
             public int HP { get; set; }
             public int Attack { get; set; }
+            public int Dodge { get; set; }
             public string Name { get; set; }
 
-            public Enemy(int hp, int attack, string name)
+            public Enemy(int hp, int attack, string name, int dodge)
             {
                 HP = hp;
                 Attack = attack;
                 Name = name;
+                Dodge = dodge;
             }
         }
 
@@ -101,7 +102,7 @@ namespace DemoGame
 
         static void Battle(Character player, Enemy enemy)
         {
-            
+            Console.WriteLine("")
         }
 
         public static void Main()
