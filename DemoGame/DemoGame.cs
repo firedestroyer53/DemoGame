@@ -1,7 +1,21 @@
-﻿namespace DemoGame
+﻿
+namespace DemoGame
 {
     class DemoGame
     {
+        public class Item
+        {
+            public int Amount { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+
+            public Item(int amount, string name, string description)
+            {   
+                Amount = amount;
+                Name = name;
+                Description = description;
+            }
+        }
         public class Character
         {
             public int Strength { get; set; }
@@ -9,15 +23,19 @@
             public int Agility { get; set; }
             public int Reputation { get; set; }
             public int HP { get; set; }
+
+            public Item[] Inventory { get; set; }
+
             public string Name { get; set; }
-            public Character(int strength, int agility, int intelligence, string name, int reputation, int hp)
+            public Character(int strength, int agility, int intelligence, int reputation, int hp, Item[] inventory, string name)
             {
                 Strength = strength;
                 Agility = agility;
                 Intelligence = intelligence;
-                Name = name;
+                Inventory = inventory;
                 Reputation = reputation;
                 HP = hp;
+                Name = name;
             }
 
         }
@@ -53,7 +71,6 @@
                 Dodge = dodge;
             }
         }
-
         static Character CreateCharacter()
         {
             const int NUM_INPUTS = 3;
@@ -84,8 +101,10 @@
                     }
 
                     // Create player character
+                    
+                    Item[] inventory = {};
                     Console.WriteLine("What is your name?");
-                    player = new Character(inputs[0], inputs[1], inputs[2], Console.ReadLine(), 50, 100);
+                    player = new Character(inputs[0], inputs[1], inputs[2], 50, 50, inventory, Console.ReadLine());
                 }
                 catch (FormatException)
                 {
@@ -100,24 +119,20 @@
             return player;
         }
 
-        static void Battle(Character player, Enemy enemy)
-        {
-            Console.WriteLine("")
-        }
 
         public static void Main()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
-            Console.WriteLine("Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
+            Console.WriteLine(
+                "Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
             Console.WriteLine("You need to assign 20 skill points.");
             //Increases the health and attack stats of monsters with the player's
             float LevelScale = 1.0f;
             // Creates the character
             Character player = CreateCharacter();
 
-            Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
-
-            Console.WriteLine("No tutorial yet, here is first battle");
-            
+            Console.WriteLine(
+                $"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
+        }
     }
 }
