@@ -71,6 +71,7 @@ namespace DemoGame
                 Dodge = dodge;
             }
         }
+
         static Character CreateCharacter()
         {
             const int NUM_INPUTS = 3;
@@ -119,7 +120,6 @@ namespace DemoGame
             return player;
         }
 
-
         public static void Main()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
@@ -131,8 +131,7 @@ namespace DemoGame
             // Creates the character
             Character player = CreateCharacter();
 
-            Console.WriteLine(
-                $"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
+            Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
         }
     }
 }
