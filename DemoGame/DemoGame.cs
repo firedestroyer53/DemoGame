@@ -1,9 +1,8 @@
-﻿
-namespace DemoGame
+﻿namespace DemoGame
 {
     class DemoGame
     {
-        public class Item
+        private class Item
         {
             public int Amount { get; set; }
             public string Name { get; set; }
@@ -15,8 +14,13 @@ namespace DemoGame
                 Name = name;
                 Description = description;
             }
+            public override string ToString()
+            {
+                return $"{Name} (x{Amount}): {Description}";
+            }
+
         }
-        public class Character
+        private class Character
         {
             public int Strength { get; set; }
             public int Intelligence { get; set; }
@@ -24,10 +28,10 @@ namespace DemoGame
             public int Reputation { get; set; }
             public int HP { get; set; }
 
-            public Item[] Inventory { get; set; }
+            public List<Item> Inventory { get; set; }
 
             public string Name { get; set; }
-            public Character(int strength, int agility, int intelligence, int reputation, int hp, Item[] inventory, string name)
+            public Character(int strength, int agility, int intelligence, int reputation, int hp, List<Item> inventory, string name)
             {
                 Strength = strength;
                 Agility = agility;
@@ -39,7 +43,7 @@ namespace DemoGame
             }
 
         }
-        public class NPC
+        private class NPC
         {
             public int LikabilityScore { get; set; }
             public string[] Dialogue { get; set; }
@@ -56,7 +60,7 @@ namespace DemoGame
                 IsAllyable = isAllyable;
             }
         }
-        public class Enemy
+        private class Enemy
         {
             public int HP { get; set; }
             public int Attack { get; set; }
@@ -103,7 +107,7 @@ namespace DemoGame
 
                     // Create player character
                     
-                    Item[] inventory = {};
+                    List<Item> inventory = new List<Item>();
                     Console.WriteLine("What is your name?");
                     player = new Character(inputs[0], inputs[1], inputs[2], 50, 50, inventory, Console.ReadLine());
                 }
@@ -120,18 +124,23 @@ namespace DemoGame
             return player;
         }
 
-        public static void Main()
+        static
+
+        private static void Main()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
-            Console.WriteLine(
-                "Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
+            Console.WriteLine("Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
             Console.WriteLine("You need to assign 20 skill points.");
-            //Increases the health and attack stats of monsters with the player's
+            //Increases the health and attack stats of monsters with the player's (not yet implemented)
             float LevelScale = 1.0f;
             // Creates the character
             Character player = CreateCharacter();
-
+            
             Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
+            Item sword = new Item(1, "Sword", "A sharp weapon used for combat.");
+            player.Inventory.Add(sword);
+            player.Inventory.ForEach(Console.WriteLine);
+            Console.ReadLine();
         }
     }
 }
