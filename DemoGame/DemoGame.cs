@@ -2,6 +2,25 @@
 {
     class DemoGame
     {
+        private class Move
+        {
+            public int Damage { get; set; }
+            public int Accuracy { get; set; }
+            public string Type { get; set; }
+            public string Name { get; set; }
+
+            public Move(int damage, int accuracy, string type, string name)
+            {
+                Damage = damage;
+                Accuracy = accuracy;
+                Type = type;
+                Name = name;
+            }
+            public override string ToString()
+            {
+                return $"{Name} ({Type}): {Damage} damage, {Accuracy}% accurate";
+            }
+        }
         private class Item
         {
             public int Amount { get; set; }
@@ -29,16 +48,18 @@
             public int HP { get; set; }
 
             public List<Item> Inventory { get; set; }
+            public List<Move> Moves { get; set; }
 
             public string Name { get; set; }
-            public Character(int strength, int agility, int intelligence, int reputation, int hp, List<Item> inventory, string name)
+            public Character(int strength, int agility, int intelligence, int reputation, int hp, List<Item> inventory, List<Move> moves, string name)
             {
                 Strength = strength;
                 Agility = agility;
                 Intelligence = intelligence;
-                Inventory = inventory;
                 Reputation = reputation;
                 HP = hp;
+                Inventory = inventory;
+                Moves = moves;
                 Name = name;
             }
 
@@ -64,15 +85,13 @@
         {
             public int HP { get; set; }
             public int Attack { get; set; }
-            public int Dodge { get; set; }
             public string Name { get; set; }
 
-            public Enemy(int hp, int attack, string name, int dodge)
+            public Enemy(int hp, int attack, string name)
             {
                 HP = hp;
                 Attack = attack;
                 Name = name;
-                Dodge = dodge;
             }
         }
 
@@ -87,7 +106,7 @@
                 try
                 {
                     // Read input and parse to integers
-                    int[] inputs = Console.ReadLine().Split(',')
+                    int[]? inputs = Console.ReadLine().Split(',')
                         .Select(int.Parse).ToArray();
 
                     // Check number of inputs
@@ -108,8 +127,9 @@
                     // Create player character
                     
                     List<Item> inventory = new List<Item>();
+                    List<Move> moves = new List<Move>();
                     Console.WriteLine("What is your name?");
-                    player = new Character(inputs[0], inputs[1], inputs[2], 50, 50, inventory, Console.ReadLine());
+                    player = new Character(inputs[0], inputs[1], inputs[2], 50, 50, inventory, moves, Console.ReadLine());
                 }
                 catch (FormatException)
                 {
@@ -124,8 +144,6 @@
             return player;
         }
 
-        static
-
         private static void Main()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
@@ -138,8 +156,13 @@
             
             Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
             Item sword = new Item(1, "Sword", "A sharp weapon used for combat.");
+            Move fireball = new Move(10, 90, "Magic", "Fireball");
             player.Inventory.Add(sword);
             player.Inventory.ForEach(Console.WriteLine);
+
+            player.Moves.Add(fireball);
+            player.Moves.ForEach(Console.WriteLine);
+
             Console.ReadLine();
         }
     }
