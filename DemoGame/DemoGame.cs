@@ -144,7 +144,7 @@
             return player;
         }
 
-        static object Battle(Character player, List<NPC>? npcs, Enemy enemy)
+        static object Battle(Character player, List<NPC>? npcs, List<Enemy> enemies)
         {
             return true;
         }
