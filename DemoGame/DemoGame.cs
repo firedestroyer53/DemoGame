@@ -144,6 +144,11 @@
             return player;
         }
 
+        static object Battle(Character player, List<NPC>? npcs, Enemy enemy)
+        {
+            return true;
+        }
+
         private static void Main()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
