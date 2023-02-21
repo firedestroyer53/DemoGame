@@ -1,8 +1,82 @@
-﻿namespace DemoGame
+﻿using Newtonsoft.Json;
+using System.Text.Json;
+
+namespace DemoGame
 {
     partial class DemoGame
     {
+        private static void SaveGame(Character player)
+        {
+            string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "saved_game.json");
 
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                serializer.Serialize(writer, player);
+            }
+            Console.WriteLine($"Game saved to saved_game.json.");
+        }
+
+
+        private static Character LoadGame()
+        {
+            string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "saved_game.json");
+
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine($"Save file '{fileName}' not found.");
+                return null;
+            }
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                return (Character)serializer.Deserialize(reader, typeof(Character));
+            }
+        }
+
+
+
+        private static Character Intro()
+        {
+            Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
+            Console.WriteLine("Enter '1' to start a new game or '2' to load a saved game.");
+
+            string input = Console.ReadLine();
+            bool newCharacter = false;
+
+            Character player;
+            if (input == "2")
+            {
+                Console.WriteLine("Loading game...");
+                player = LoadGame();
+                Console.WriteLine(player.HP);
+            }
+            else
+            {
+                Console.WriteLine("Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
+                Console.WriteLine("You need to assign 20 skill points.");
+                player = CreateCharacter;
+                newCharacter = true;
+            }
+
+            Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
+            if (newCharacter == true)
+            {
+                // Test add item and move
+                Item sword = new Item(1, "Sword", "A sharp weapon used for combat.");
+                Move fireball = new Move(10, 90, "Magic", "Fireball");
+                player.Inventory.Add(sword);
+
+
+                player.Moves.Add(fireball);
+
+            }
+            Console.WriteLine("Inventory:");
+            player.Inventory.ForEach(Console.WriteLine);
+            Console.WriteLine("Moveset:");
+            player.Moves.ForEach(Console.WriteLine);
+            return player;
+        }
         static Character CreateCharacter
         {
             get
@@ -54,11 +128,10 @@
                 return player;
             }
         }
-
         static bool Battle(Character player, Enemy enemy)
         {
             Console.WriteLine($"You have encountered a(n) {enemy.Name}.");
-
+            int initialHealth = player.HP;
             Random random = new Random();
 
             while (player.HP > 0 && enemy.HP > 0)
@@ -93,6 +166,7 @@
                 if (enemy.HP <= 0)
                 {
                     Console.WriteLine("You have won!");
+                    player.HP = initialHealth;
                     return true;
                 }
 
@@ -100,44 +174,39 @@
                 player.HP -= damage;
 
                 Console.WriteLine($"The enemy attacks! You take {damage} damage!");
-                Console.WriteLine($"Current Health: {player.HP}");
+                
 
                 if (player.HP <= 0)
                 {
                     Console.WriteLine("You have lost...");
+                    player.HP = initialHealth / 2;
                     return false;
                 }
+                else
+                {
+                    Console.WriteLine($"Current Health: {player.HP}");
+                }
             }
-
+            
             return false; // this line should be unreachable
         }
 
-
-
         private static void Main()
         {
-            Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
-            Console.WriteLine("Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
-            Console.WriteLine("You need to assign 20 skill points.");
-            //Increases the health and attack stats of monsters with the player's (not yet implemented)
-            float LevelScale = 1.0f;
-            // Creates the character
-            Character player = CreateCharacter;
             
-            Console.WriteLine($"{player.Name} has a strength stat of {player.Strength}, an agility stat of {player.Agility}, and an intelligence stat of {player.Intelligence}.");
-
-            //Test add item and move
-            Item sword = new Item(1, "Sword", "A sharp weapon used for combat.");
-            Move fireball = new Move(10, 90, "Magic", "Fireball");
-            player.Inventory.Add(sword);
-            player.Inventory.ForEach(Console.WriteLine);
-            
-            player.Moves.Add(fireball);
-            player.Moves.ForEach(Console.WriteLine);
-
-            Enemy dude = new Enemy(50, 10, "dude");
+            Character player = Intro();
+            Enemy dude = new Enemy(50, 70, "dude");
 
             Battle(player, dude);
+
+            Console.WriteLine("Do you want to save your game? (y/n)");
+
+            string input = Console.ReadLine();
+            if (input.ToLower() == "y")
+            {
+                SaveGame(player);
+                Console.WriteLine("Game saved.");
+            }
 
             Console.ReadLine();
         }

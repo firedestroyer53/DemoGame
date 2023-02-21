@@ -2,6 +2,7 @@
 {
     partial class DemoGame
     {
+        [Serializable]
         private class Character
         {
             public int Strength { get; set; }

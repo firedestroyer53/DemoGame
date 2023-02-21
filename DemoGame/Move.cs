@@ -2,6 +2,7 @@
 {
     partial class DemoGame
     {
+        [Serializable]
         private class Move
         {
             public int Damage { get; set; }

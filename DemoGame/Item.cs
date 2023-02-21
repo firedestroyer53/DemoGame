@@ -2,6 +2,7 @@
 {
     partial class DemoGame
     {
+        [Serializable]
         private class Item
         {
             public int Amount { get; set; }

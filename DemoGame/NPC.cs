@@ -2,6 +2,7 @@
 {
     partial class DemoGame
     {
+        [Serializable]
         private class NPC
         {
             public int LikabilityScore { get; set; }

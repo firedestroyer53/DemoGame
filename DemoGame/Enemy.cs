@@ -2,8 +2,10 @@
 {
     partial class DemoGame
     {
+        [Serializable]
         private class Enemy
         {
+
             public int HP { get; set; }
             public int Attack { get; set; }
             public string Name { get; set; }
