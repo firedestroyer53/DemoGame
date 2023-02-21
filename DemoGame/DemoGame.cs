@@ -205,7 +205,7 @@ namespace DemoGame
                 SaveGame(player);
                 Console.WriteLine("Game saved.");
             }
-
+            
             Console.ReadLine();
         }
     }
