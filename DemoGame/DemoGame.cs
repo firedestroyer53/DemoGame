@@ -16,8 +16,6 @@ namespace DemoGame
             }
             Console.WriteLine($"Game saved to saved_game.json.");
         }
-
-
         private static Character LoadGame()
         {
             string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "saved_game.json");
@@ -33,8 +31,6 @@ namespace DemoGame
                 return (Character)serializer.Deserialize(reader, typeof(Character));
             }
         }
-
-
 
         private static Character Intro()
         {
@@ -77,6 +73,7 @@ namespace DemoGame
             player.Moves.ForEach(Console.WriteLine);
             return player;
         }
+
         static Character CreateCharacter
         {
             get
@@ -128,6 +125,7 @@ namespace DemoGame
                 return player;
             }
         }
+
         static bool Battle(Character player, Enemy enemy)
         {
             Console.WriteLine($"You have encountered a(n) {enemy.Name}.");
