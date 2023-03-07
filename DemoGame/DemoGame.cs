@@ -194,7 +194,13 @@ namespace DemoGame
             Enemy dude = new Enemy(50, 70, "dude");
 
             Battle(player, dude);
-
+            //TODO: Add a world that the player can explore and enemies that they can fight.
+            //Ability to save and load the current game state and not just the character's stats.
+            //Add more stats and items.
+            //Add a story.
+            //Add a GUI.
+            
+            
             Console.WriteLine("Do you want to save your game? (y/n)");
 
             string input = Console.ReadLine();
@@ -203,7 +209,7 @@ namespace DemoGame
                 SaveGame(player);
                 Console.WriteLine("Game saved.");
             }
-
+            
             Console.ReadLine();
         }
     }
