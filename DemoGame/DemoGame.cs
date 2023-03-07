@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Text.Json;
-
 namespace DemoGame
 {
     partial class DemoGame
@@ -24,6 +23,7 @@ namespace DemoGame
             {
                 Console.WriteLine($"Save file '{fileName}' not found.");
                 return null;
+
             }
             using (StreamReader reader = new StreamReader(fileName))
             {
@@ -45,7 +45,6 @@ namespace DemoGame
             {
                 Console.WriteLine("Loading game...");
                 player = LoadGame();
-                Console.WriteLine(player.HP);
             }
             else
             {
@@ -59,13 +58,13 @@ namespace DemoGame
             if (newCharacter == true)
             {
                 // Test add item and move
+                Type Magic = new Type("Magic", null, null, null);
                 Item sword = new Item(1, "Sword", "A sharp weapon used for combat.");
-                Move fireball = new Move(10, 90, "Magic", "Fireball");
+                Move fireball = new Move(10, 90, Magic, "Fireball");
                 player.Inventory.Add(sword);
 
 
                 player.Moves.Add(fireball);
-
             }
             Console.WriteLine("Inventory:");
             player.Inventory.ForEach(Console.WriteLine);
@@ -110,7 +109,7 @@ namespace DemoGame
                         List<Item> inventory = new List<Item>();
                         List<Move> moves = new List<Move>();
                         Console.WriteLine("What is your name?");
-                        player = new Character(inputs[0], inputs[1], inputs[2], 50, 50, inventory, moves, Console.ReadLine());
+                        player = new Character(inputs[0], inputs[1], inputs[2], 50, 100, inventory, moves, Console.ReadLine());
                     }
                     catch (FormatException)
                     {
@@ -191,7 +190,6 @@ namespace DemoGame
 
         private static void Main()
         {
-            
             Character player = Intro();
             Enemy dude = new Enemy(50, 70, "dude");
 
