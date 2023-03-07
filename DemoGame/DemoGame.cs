@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 namespace DemoGame
 {
-    partial class DemoGame
+    public class DemoGame
     {
-        private static void SaveGame(Character player)
+        private static void SaveGame(Character player, World world)
         {
             string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "saved_game.json");
 
@@ -12,10 +13,11 @@ namespace DemoGame
             {
                 Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
                 serializer.Serialize(writer, player);
+                serializer.Serialize(writer, world);
             }
             Console.WriteLine($"Game saved to saved_game.json.");
         }
-        private static Character LoadGame()
+        private static Tuple<Character,World> LoadGame()
         {
             string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "saved_game.json");
 
@@ -28,11 +30,52 @@ namespace DemoGame
             using (StreamReader reader = new StreamReader(fileName))
             {
                 Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
-                return (Character)serializer.Deserialize(reader, typeof(Character));
+                Character player = (Character)serializer.Deserialize(reader, typeof(Character));
+                World world = (World)serializer.Deserialize(reader, typeof(World));
+                return new Tuple<Character, World>(player, world);
+                
             }
         }
+        private static World CreateWorld()
+        {
+            Type Normal = new Type("Normal", null, null, null);
+            Enemy Guy = new Enemy(10, 10, "Guy", Normal);
+            Enemy Guy2 = new Enemy(20, 20, "Guy2", Normal);
+            Enemy Guy3 = new Enemy(30, 30, "Guy3", Normal);
+            // random generation of world
+            Random rnd = new Random();
+            int numSectors = rnd.Next(5, 10);
+            List<Sector> sectors = new List<Sector>();
+            for (int i = 0; i < numSectors; i++)
+            {
+                // random generation of enemies
+                int numEnemies = rnd.Next(1, 5);
+                List<Enemy> enemies = new List<Enemy>();
+                for (int j = 0; j < numEnemies; j++)
+                {
+                    int enemyType = rnd.Next(1, 4);
+                    // adding random enemy to the list
+                    switch (enemyType)
+                    {
+                        case 1:
+                            enemies.Add(Guy);
+                            break;
+                        case 2:
+                            enemies.Add(Guy2);
+                            break;
+                        case 3:
+                            enemies.Add(Guy3);
+                            break;
+                    }
+                }
+                // adding sector to the list
+                sectors.Add(new Sector("Sector " + i, enemies, sectors));
+            }
+            return new World(sectors);
+            }
 
-        private static Character Intro()
+
+        private static Tuple<Character,World> Intro()
         {
             Console.WriteLine("Welcome to [INSERT GAME NAME HERE].");
             Console.WriteLine("Enter '1' to start a new game or '2' to load a saved game.");
@@ -44,13 +87,13 @@ namespace DemoGame
             if (input == "2")
             {
                 Console.WriteLine("Loading game...");
-                player = LoadGame();
+                return LoadGame();
             }
             else
             {
                 Console.WriteLine("Please input your character's stats (strength, agility, intelligence) in the format of an array (e.g. 1,2,3).");
                 Console.WriteLine("You need to assign 20 skill points.");
-                player = CreateCharacter;
+                player = GetCreateCharacter();
                 newCharacter = true;
             }
 
@@ -70,59 +113,57 @@ namespace DemoGame
             player.Inventory.ForEach(Console.WriteLine);
             Console.WriteLine("Moveset:");
             player.Moves.ForEach(Console.WriteLine);
-            return player;
+            World world = CreateWorld();
+            return new Tuple<Character,World>(player,world);   
         }
 
-        static Character CreateCharacter
+        private static Character GetCreateCharacter()
         {
-            get
+            const int NUM_INPUTS = 3;
+
+            // Input loop
+            Character? player = null;
+            while (player == null)
             {
-                const int NUM_INPUTS = 3;
-
-                // Input loop
-                Character? player = null;
-                while (player == null)
+                try
                 {
-                    try
+                    // Read input and parse to integers
+                    int[]? inputs = Console.ReadLine().Split(',')
+                        .Select(int.Parse).ToArray();
+
+                    // Check number of inputs
+                    if (inputs.Length != NUM_INPUTS)
                     {
-                        // Read input and parse to integers
-                        int[]? inputs = Console.ReadLine().Split(',')
-                            .Select(int.Parse).ToArray();
-
-                        // Check number of inputs
-                        if (inputs.Length != NUM_INPUTS)
-                        {
-                            Console.WriteLine($"Invalid number of inputs. Please enter {NUM_INPUTS} inputs.");
-                            continue;
-                        }
-
-                        // Check skill point total
-                        int totalSkillPoints = inputs.Sum();
-                        if (totalSkillPoints != 20)
-                        {
-                            Console.WriteLine("Invalid skill point total. Please assign exactly 20 skill points.");
-                            continue;
-                        }
-
-                        // Create player character
-
-                        List<Item> inventory = new List<Item>();
-                        List<Move> moves = new List<Move>();
-                        Console.WriteLine("What is your name?");
-                        player = new Character(inputs[0], inputs[1], inputs[2], 50, 100, inventory, moves, Console.ReadLine());
+                        Console.WriteLine($"Invalid number of inputs. Please enter {NUM_INPUTS} inputs.");
+                        continue;
                     }
-                    catch (FormatException)
+
+                    // Check skill point total
+                    int totalSkillPoints = inputs.Sum();
+                    if (totalSkillPoints != 20)
                     {
-                        Console.WriteLine("Invalid input format. Please enter integers separated by commas.");
+                        Console.WriteLine("Invalid skill point total. Please assign exactly 20 skill points.");
+                        continue;
                     }
-                    catch (OverflowException)
-                    {
-                        Console.WriteLine("Input value is too large. Please enter a smaller value.");
-                    }
+
+                    // Create player character
+
+                    List<Item> inventory = new List<Item>();
+                    List<Move> moves = new List<Move>();
+                    Console.WriteLine("What is your name?");
+                    player = new Character(inputs[0], inputs[1], inputs[2], 50, 100, inventory, moves, Console.ReadLine());
                 }
-
-                return player;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid input format. Please enter integers separated by commas.");
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("Input value is too large. Please enter a smaller value.");
+                }
             }
+
+            return player;
         }
 
         static bool Battle(Character player, Enemy enemy)
@@ -190,24 +231,19 @@ namespace DemoGame
 
         private static void Main()
         {
-            Character player = Intro();
-            Type Fire = new Type("Fire", null, null, null);
-            Enemy dude = new Enemy(50, 70, "dude", Fire);
+            Tuple<Character,World> Introvar = Intro();
+            Character player = Introvar.Item1;
+            World world = Introvar.Item2;
 
-            Battle(player, dude);
-            
-            
-            
+
             Console.WriteLine("Do you want to save your game? (y/n)");
 
             string input = Console.ReadLine();
             if (input.ToLower() == "y")
             {
-                SaveGame(player);
+                SaveGame(player, world);
                 Console.WriteLine("Game saved.");
             }
-            
-            Console.ReadLine();
         }
     }
 }

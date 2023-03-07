@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace DemoGame
 {
+    [Serializable]
     internal class World
     {
-        //randomly generated world with different areas that the player can traverse through and battle things in
-        //each area has a different theme and different enemies
-        //each area has a shop that the player can buy items from
-        //each area has a town with NPC's, and some of them you can recruit to your team.
-        //each area has a dungeon with a boss that is needed to defeat to progress to the next area
-        //world constructor here
-        //world methods here
-        
+        //randomly generate a world with a certain number of sectors
+        public List<Sector> Sectors { get; set; }
 
+        public World(List<Sector> sectors)
+        {
+            Sectors = sectors;
+        }
     }
 }
