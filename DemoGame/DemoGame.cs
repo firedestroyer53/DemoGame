@@ -191,14 +191,11 @@ namespace DemoGame
         private static void Main()
         {
             Character player = Intro();
-            Enemy dude = new Enemy(50, 70, "dude");
+            Type Fire = new Type("Fire", null, null, null);
+            Enemy dude = new Enemy(50, 70, "dude", Fire);
 
             Battle(player, dude);
-            //TODO: Add a world that the player can explore and enemies that they can fight.
-            //Ability to save and load the current game state and not just the character's stats.
-            //Add more stats and items.
-            //Add a story.
-            //Add a GUI.
+            
             
             
             Console.WriteLine("Do you want to save your game? (y/n)");
