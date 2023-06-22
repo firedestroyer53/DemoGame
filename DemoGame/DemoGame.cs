@@ -238,8 +238,8 @@ namespace DemoGame
 
             Console.WriteLine("Do you want to save your game? (y/n)");
 
-            string input = Console.ReadLine();
-            if (input.ToLower() == "y")
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "y")
             {
                 SaveGame(player, world);
                 Console.WriteLine("Game saved.");
